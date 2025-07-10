@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소담소담 프로그램 소개</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-5">
+        <div class="text-center mb-5">
+            <img th:src="@{/images/banner_main.jpg}" alt="소담소담 메인 이미지" class="img-fluid rounded shadow-sm" style="max-width: 800px;">
+            <h1 class="mt-4 display-4">소담소담 소개</h1>
+        </div>
+
+        <section class="mb-5">
+            <h2 class="text-primary mb-3">소담소담은</h2>
+            <p class="lead">남녀노소, 세대를 아우르며 모두가 공감할 수 있는 이야기를 소소하게, 그러나 진심 담아 나누는 팟캐스트입니다.</p>
+            <p class="lead">세상을 살아가며 누구나 겪고 느끼는 고민, 감정, 일상, 관계 이야기까지— 소담소담은 당신의 마음에 말을 겁니다.</p>
+            <p class="lead">일상의 틈에서 잠시 쉬어가는 따뜻한 대화, 가벼운 수다 속에서도 깊은 공감과 위로를 드리고 싶어요.</p>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-primary mb-3">이런 분들께 추천해요!</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">공감 가는 이야기를 듣고 싶은 분</li>
+                <li class="list-group-item">혼자 있는 시간, 누군가의 이야기가 함께하길 원하는 분</li>
+                <li class="list-group-item">다양한 세대의 시선을 이해하고 싶은 분</li>
+                <li class="list-group-item">피식 웃고, 가끔은 울컥하는 그런 대화를 찾는 분</li>
+            </ul>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-primary mb-3">방송 형식</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>형식:</strong> 팟캐스트 (오디오 중심)</li>
+                <li class="list-group-item"><strong>진행:</strong> 일상 속 다양한 주제에 대해 자연스럽게 이야기</li>
+                <li class="list-group-item"><strong>업로드:</strong> 정기 업데이트 (예: 매주 수요일)</li>
+                <li class="list-group-item"><strong>플랫폼:</b> Apple Podcasts, Spotify, YouTube, Instagram 등에서 청취 가능</li>
+            </ul>
+        </section>
+
+        <section class="mb-5">
+            <h2 class="text-primary mb-3">소담소담, 이런 뜻이에요</h2>
+            <p class="lead"><strong>‘소담소담’</strong>은 작지만 따뜻하고 정감 있는 이야기를 뜻해요.</p>
+            <p class="lead">여러분과 함께 만드는 조용하고 소소한 이야기의 장, 그게 바로 소담소담입니다.</p>
+        </section>
+
+        <section class="text-center">
+            <p class="lead">지금 바로 팔로우하고, 당신만의 이야기도 함께 나눠보세요!</p>
+            <a href="https://instagram.com/mk_sodam" class="btn btn-warning btn-lg" target="_blank">팔로우하기</a>
+        </section>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

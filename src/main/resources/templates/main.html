@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBS 라디오 프로그램 메인</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 1em 0;
+            text-align: center;
+        }
+        nav {
+            background-color: #555;
+            color: #fff;
+            padding: 0.5em 0;
+            text-align: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0 1em;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        footer {
+            text-align: center;
+            padding: 1em 0;
+            background-color: #333;
+            color: #fff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SBS 라디오 프로그램</h1>
+        <p>메인 페이지</p>
+    </header>
+    <nav>
+        <a href="/">홈</a>
+        <a href="/about">프로그램 소개</a>
+        <a href="/schedule">편성표</a>
+        <a href="/listen">다시 듣기</a>
+        <a href="/community">시청자 게시판</a>
+    </nav>
+    <div class="container">
+        <h2>환영합니다!</h2>
+        <p>이곳은 SBS 라디오 프로그램의 메인 페이지입니다. 최신 에피소드 정보, 편성표, 그리고 다양한 소식을 확인하세요.</p>
+
+        <h3>최신 에피소드</h3>
+        <p><strong>[프로그램명]</strong> - [에피소드 제목] ([날짜])</p>
+        <p>간략한 에피소드 설명...</p>
+        <a href="/episode-detail">자세히 보기</a>
+
+        <h3>주요 코너</h3>
+        <ul>
+            <li>코너 1: 설명...</li>
+            <li>코너 2: 설명...</li>
+            <li>코너 3: 설명...</li>
+        </ul>
+
+        <h3>편성표</h3>
+        <p>매일 [시간]부터 [시간]까지 방송됩니다.</p>
+        <a href="/schedule">전체 편성표 보기</a>
+    </div>
+    <footer>
+        <p>&copy; 2025 SBS. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,9 @@
+2025-07-10 16:49:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-214]
+2025-07-10 16:49:23 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-214]
+2025-07-10 16:49:26 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-214]
+2025-07-10 19:10:10 jdbc[54]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM INQUIRY INQUIRY_LIKE [*]PODCAST_EPISODES"; SQL statement:
+SELECT * FROM INQUIRY INQUIRY_LIKE PODCAST_EPISODES [42000-214]

@@ -1,0 +1,81 @@
+/* Custom styles for index.html */
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f0f2f5;
+}
+
+.hero-section {
+    height: 500px; /* Adjust as needed */
+    overflow: hidden;
+    position: relative;
+    color: white;
+}
+
+.hero-background-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: brightness(0.6); /* Darken the image for text readability */
+}
+
+.hero-overlay {
+    background-color: rgba(0, 0, 0, 0.4); /* Dark overlay */
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.featured-sections .card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.featured-sections .card:hover {
+    transform: translateY(-5px);
+}
+
+.featured-sections .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.program-info .card-title {
+    color: #0056b3;
+}
+
+.cta-section {
+    background-color: #e9ecef;
+    padding: 60px 0;
+    border-radius: 10px;
+}
+
+.cta-section h2 {
+    color: #343a40;
+}
+
+.cta-section p {
+    color: #6c757d;
+}
+
+/* General adjustments for better aesthetics */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.05);
+}
+
+.footer {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+
+.footer a {
+    color: #adb5bd;
+}
+
+.footer a:hover {
+    color: #f8f9fa;
+}
