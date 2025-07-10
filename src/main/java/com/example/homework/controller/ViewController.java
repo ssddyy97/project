@@ -89,20 +89,14 @@ public class ViewController {
         return "intro";
     }
 
-    @GetMapping("/schedule")
-    public String schedule() {
-        return "schedule";
-    }
+    
 
     @GetMapping("/clips")
     public String clips() {
         return "clips";
     }
 
-    @GetMapping("/podcast")
-    public String podcast() {
-        return "podcast";
-    }
+    
 
     @GetMapping("/contact")
     public String contact() {

@@ -28,8 +28,17 @@ public class PodcastEpisode {
     @Column(nullable = false)
     private String spotifyUrl; // URL to the Spotify show or episode
 
+    @Column(nullable = false)
+    private String author;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private long views = 0;
+
+    @Column(nullable = false)
+    private long likes = 0;
 
     @PrePersist
     protected void onCreate() {

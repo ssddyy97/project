@@ -16,163 +16,71 @@
             <p class="lead">전체 방송을 다시 듣거나 팟캐스트로 즐길 수 있습니다.</p>
         </div>
 
-        <!-- Podcast Add Form -->
-        <section class="mb-5 p-4 border rounded shadow-sm">
-            <h2 class="mb-4 text-center">새 팟캐스트 에피소드 추가</h2>
-            <form id="addPodcastForm">
-                <div class="mb-3">
-                    <label for="episodeTitle" class="form-label">제목</label>
-                    <input type="text" class="form-control" id="episodeTitle" required>
-                </div>
-                <div class="mb-3">
-                    <label for="episodeDescription" class="form-label">설명</label>
-                    <textarea class="form-control" id="episodeDescription" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="spotifyUrl" class="form-label">Spotify 에피소드/쇼 URL</label>
-                    <input type="url" class="form-control" id="spotifyUrl" placeholder="예: https://open.spotify.com/episode/EPISODE_ID" required>
-                </div>
-                <button type="submit" class="btn btn-primary w-100">에피소드 추가</button>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form th:action="@{/podcast}" method="get" class="d-flex">
+                <input type="text" name="searchKeyword" class="form-control me-2" placeholder="제목 또는 작성자 검색" th:value="${searchKeyword}">
+                <button type="submit" class="btn btn-outline-secondary">검색</button>
             </form>
-        </section>
+            <a th:href="@{/podcast/new}" class="btn btn-primary">새 에피소드 등록</a>
+        </div>
 
-        <!-- Podcast List -->
-        <section class="mb-5">
-            <h2 class="mb-4 text-center">전체 팟캐스트 에피소드</h2>
-            <div id="podcastListContainer" class="row">
-                <!-- Podcast episodes will be loaded here by JavaScript -->
-            </div>
-            <div class="text-center mt-4">
-                <button id="loadMorePodcastsBtn" class="btn btn-secondary" style="display: none;">더 보기</button>
-            </div>
-        </section>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">등록일</th>
+                    <th scope="col">조회수</th>
+                    <th scope="col">좋아요</th>
+                    <th scope="col">바로 듣기</th>
+                    <th scope="col">관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="episode : ${podcastPage.content}">
+                    <th scope="row" th:text="${episode.id}"></th>
+                    <td><a th:href="@{/podcast/{id}(id=${episode.id})}" th:text="${episode.title}"></a></td>
+                    <td th:text="${#temporals.format(episode.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${episode.views}"></td>
+                    <td th:text="${episode.likes}"></td>
+                    <td>
+                        <a th:href="${episode.spotifyUrl}" target="_blank" class="btn btn-sm btn-info">Spotify</a>
+                    </td>
+                    <td>
+                        <a th:href="@{/podcast/edit/{id}(id=${episode.id})}" class="btn btn-sm btn-warning">수정</a>
+                        <form th:action="@{/podcast/delete/{id}(id=${episode.id})}" method="post" style="display:inline;" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                            <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${podcastPage.content.isEmpty()}">
+                    <td colspan="7" class="text-center">등록된 팟캐스트 에피소드가 없습니다.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${podcastPage.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/podcast(page=${podcastPage.number - 1}, size=${podcastPage.size}, searchKeyword=${searchKeyword})}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, podcastPage.totalPages - 1)}" th:classappend="${i == podcastPage.number} ? 'active'">
+                    <a class="page-link" th:href="@{/podcast(page=${i}, size=${podcastPage.size}, searchKeyword=${searchKeyword})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${podcastPage.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/podcast(page=${podcastPage.number + 1}, size=${podcastPage.size}, searchKeyword=${searchKeyword})}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </main>
 
     <div th:replace="fragments/footer :: footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const addPodcastForm = document.getElementById('addPodcastForm');
-        const podcastListContainer = document.getElementById('podcastListContainer');
-        const loadMorePodcastsBtn = document.getElementById('loadMorePodcastsBtn');
-
-        let currentPodcastPage = 0;
-        let totalPodcastPages = 0;
-
-        // Function to extract Spotify ID from URL and generate embed URL
-        function getSpotifyEmbedUrl(url) {
-            const showMatch = url.match(/open\.spotify\.com\/show\/([a-zA-Z0-9]+)/);
-            const episodeMatch = url.match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/);
-
-            if (showMatch && showMatch[1]) {
-                return `https://open.spotify.com/embed/show/${showMatch[1]}`;
-            } else if (episodeMatch && episodeMatch[1]) {
-                return `https://open.spotify.com/embed/episode/${episodeMatch[1]}`;
-            }
-            return null; // Invalid Spotify URL
-        }
-
-        // Function to create a podcast card HTML
-        function createPodcastCard(episode) {
-            const embedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
-            if (!embedUrl) {
-                return ''; // Don't render if URL is invalid
-            }
-
-            return `
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">${episode.title}</h5>
-                            <p class="card-text flex-grow-1">${episode.description || ''}</p>
-                            <div class="ratio ratio-16x9 mb-3">
-                                <iframe src="${embedUrl}" width="100%" height="232" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                            </div>
-                            <p class="card-text"><small class="text-muted">${new Date(episode.createdAt).toLocaleString()}</small></p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Function to fetch and display podcast episodes
-        async function fetchPodcastEpisodes(page) {
-            try {
-                const response = await fetch(`/api/podcasts?page=${page}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-
-                data.content.forEach(episode => {
-                    podcastListContainer.insertAdjacentHTML('beforeend', createPodcastCard(episode));
-                });
-
-                currentPodcastPage = data.number;
-                totalPodcastPages = data.totalPages;
-
-                if (currentPodcastPage < totalPodcastPages - 1) {
-                    loadMorePodcastsBtn.style.display = 'block';
-                } else {
-                    loadMorePodcastsBtn.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error fetching podcast episodes:', error);
-                // Optionally display an error message to the user
-            }
-        }
-
-        // Handle form submission
-        addPodcastForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const episode = {
-                title: document.getElementById('episodeTitle').value,
-                description: document.getElementById('episodeDescription').value,
-                spotifyUrl: document.getElementById('spotifyUrl').value
-            };
-
-            try {
-                const response = await fetch('/api/podcasts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(episode)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const newEpisode = await response.json();
-                // Prepend the new episode to the list
-                podcastListContainer.insertAdjacentHTML('afterbegin', createPodcastCard(newEpisode));
-                addPodcastForm.reset(); // Clear the form
-                // Re-fetch to update pagination if needed, or just adjust totalPages
-                if (totalPodcastPages === 0 || podcastListContainer.children.length === 1) { // First episode added
-                    currentPodcastPage = 0; // Reset page to ensure correct pagination
-                    podcastListContainer.innerHTML = ''; // Clear existing content
-                    fetchPodcastEpisodes(0); // Re-fetch all to get correct pagination state
-                } else if (podcastListContainer.children.length % 9 === 1 && currentPodcastPage === totalPodcastPages -1) { // If adding to a full last page
-                    totalPodcastPages++; // Increment total pages
-                    loadMorePodcastsBtn.style.display = 'block'; // Show load more button
-                }
-
-
-            } catch (error) {
-                console.error('Error adding podcast episode:', error);
-                alert('팟캐스트 에피소드 추가에 실패했습니다.'); // User-friendly error message
-            }
-        });
-
-        // Handle load more button click
-        loadMorePodcastsBtn.addEventListener('click', () => {
-            fetchPodcastEpisodes(currentPodcastPage + 1);
-        });
-
-        // Initial load of podcast episodes
-        fetchPodcastEpisodes(0);
-    </script>
 </body>
 </html>

@@ -1,0 +1,56 @@
+<div th:fragment="header">
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/main" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none flex-column">
+                    <span class="fs-4">소담소담</span>
+
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/intro" class="nav-link px-2 text-secondary" style="margin-left : 40px">프로그램 소개</a></li>
+                    <li><a href="/schedule" class="nav-link px-2 text-secondary">일정표</a></li>
+                    <li><a href="/clips" class="nav-link px-2 text-secondary">방송클립</a></li>
+                    <li><a href="/podcast" class="nav-link px-2 text-secondary">다시 듣기 / 팟캐스트</a></li>
+                    <li><a href="/inquiries" class="nav-link px-2 text-secondary">신청/문의</a></li>
+                    <li><a href="/sns" class="nav-link px-2 text-secondary">우리 SNS</a></li>
+                    <li><a href="/notices" class="nav-link px-2 text-secondary">공지사항</a></li>
+                    <!-- Add more program/live related links here if needed -->
+                </ul>
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0">
+                    <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+                </form>
+
+                <div class="text-end ms-auto" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+                    <!-- Not authenticated -->
+                    <div sec:authorize="isAnonymous()">
+                        <a href="/login" class="btn btn-outline-light me-2">로그인</a>
+                        <a href="/register" class="btn btn-warning">회원 가입</a>
+                    </div>
+                    <!-- Authenticated -->
+                    <div sec:authorize="isAuthenticated()">
+                        <span class="text-white me-2"><span sec:authentication="name"></span>님 환영합니다!</span>
+                        <form th:action="@{/logout}" method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-outline-light">로그아웃</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <a href="/main">
+            <img src="/images/banner_main.jpg" alt="소담 소담 이미지" style="width: 100px; height: 100px;
+    border: 1px solid black;
+    border-radius: 10px;">
+            </a>
+        </div>
+
+    </header>
+
+    <div class="bg-primary text-white py-4 text-center">
+        <div class="container">
+            <h1 class="display-4">소담소담 SodamSodam <span class="badge bg-warning text-dark">방영중</span></h1>
+            <p class="lead">매주 토요일 오후 6시 업로드</p>
+        </div>
+
+    </div>
+</div>

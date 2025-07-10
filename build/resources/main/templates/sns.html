@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소담소담 우리 SNS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <!-- Font Awesome for social media icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="container my-5">
+        <div class="text-center mb-5">
+            <h1 class="mt-4 display-4">우리 SNS</h1>
+            <p class="lead">소담소담의 다양한 SNS 채널을 확인해보세요.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <!-- Instagram Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="fab fa-instagram fa-4x text-danger mb-3"></i>
+                        <h5 class="card-title">Instagram</h5>
+                        <p class="card-text">소담소담의 일상과 비하인드 스토리를 만나보세요.</p>
+                        <a href="https://instagram.com/mk_sodam" target="_blank" class="btn btn-outline-danger">방문하기</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spotify Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="fab fa-spotify fa-4x text-success mb-3"></i>
+                        <h5 class="card-title">Spotify Podcast</h5>
+                        <p class="card-text">소담소담 팟캐스트를 Spotify에서 바로 들어보세요.</p>
+                        <a href="https://open.spotify.com/show/7ebxo65HQjQEs2LzD1ZSiv?si=ceecd9e9a8de4510" target="_blank" class="btn btn-outline-success">듣기</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Card -->
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100 shadow-sm">
+                    <div class="card-body">
+                        <i class="fab fa-youtube fa-4x text-danger mb-3"></i>
+                        <h5 class="card-title">YouTube Channel</h5>
+                        <p class="card-text">소담소담의 영상 콘텐츠를 YouTube에서 시청하세요.</p>
+                        <a href="https://www.youtube.com/@%EC%86%8C%EB%8B%B4%EC%86%8C%EB%8B%B4SDSD" target="_blank" class="btn btn-outline-danger">시청하기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
