@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @Controller
@@ -33,22 +37,16 @@ public class InquiryController {
                                  @RequestParam(defaultValue = "10") int size,
                                  @RequestParam(required = false) String searchKeyword,
                                  Model model) {
-        try {
-            Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-            Page<Inquiry> inquiryPage;
-            if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-                inquiryPage = inquiryService.searchInquiries(searchKeyword, pageable);
-            } else {
-                inquiryPage = inquiryService.getAllInquiries(pageable);
-            }
-            model.addAttribute("inquiryPage", inquiryPage);
-            model.addAttribute("searchKeyword", searchKeyword);
-            return "inquiries";
-        } catch (Exception e) {
-            logger.error("Error fetching inquiry list: ", e);
-            model.addAttribute("errorMessage", "문의 목록을 불러오는 중 오류가 발생했습니다.");
-            return "error"; // You might want to create a dedicated error page
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Inquiry> inquiryPage;
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            inquiryPage = inquiryService.searchInquiries(searchKeyword, pageable);
+        } else {
+            inquiryPage = inquiryService.getAllInquiries(pageable);
         }
+        model.addAttribute("inquiryPage", inquiryPage);
+        model.addAttribute("searchKeyword", searchKeyword);
+        return "inquiries";
     }
 
     @GetMapping("/edit/{id}")
@@ -110,6 +108,7 @@ public class InquiryController {
 
     @GetMapping("/{id}")
     public String getInquiryDetail(@PathVariable("id") Long id, Model model) {
+        inquiryService.incrementViews(id); // 조회수 증가
         Optional<Inquiry> inquiryOptional = inquiryService.getInquiryById(id);
         if (inquiryOptional.isPresent()) {
             model.addAttribute("inquiry", inquiryOptional.get());
@@ -120,12 +119,21 @@ public class InquiryController {
     }
 
     @PostMapping("/{id}/like")
-    public String likeInquiry(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> likeInquiry(@PathVariable("id") Long id) {
+        Map<String, Object> response = new HashMap<>();
         try {
             inquiryService.incrementLikes(id);
+            response.put("liked", true);
+            response.put("newLikes", inquiryService.getInquiryById(id).get().getLikes()); // 업데이트된 좋아요 수 반환
+            return ResponseEntity.ok(response);
         } catch (IllegalStateException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            response.put("liked", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", "좋아요 처리 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return "redirect:/inquiries/" + id;
     }
 }

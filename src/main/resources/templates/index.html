@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>소담소담 SodamSodam</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/style.css?v=1.0.0}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 
@@ -36,7 +36,7 @@
     <section class="featured-sections container my-5">
         <div class="row g-4">
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-0">
+                <div class="card shadow-sm border-0">
                     <img th:src="@{/images/watch.jpg}" class="card-img-top" alt="다시보기">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">소담소담 다시보기</h5>
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-0">
+                <div class="card shadow-sm border-0">
                     <img th:src="@{/images/insta.jpg}" class="card-img-top" alt="인스타그램">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">소담소담 인스타그램</h5>
@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-0">
+                <div class="card shadow-sm border-0">
                     <img th:src="@{/images/youtube.jpg}" class="card-img-top" alt="유튜브">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">소담소담 유튜브</h5>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card h-100 shadow-sm border-0">
+                <div class="card shadow-sm border-0">
                     <img th:src="@{/images/spotify.jpg}" class="card-img-top" alt="스포티파이">
                     <div class="card-body text-center">
                         <h5 class="card-title fw-bold">소담소담 스포티파이</h5>
@@ -82,4 +82,6 @@
 <!-- Footer Include -->
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/footer-notices.js?v=1.0.0}"></script>
 </body>

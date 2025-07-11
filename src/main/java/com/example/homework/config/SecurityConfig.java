@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -27,22 +28,35 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Disable CSRF for simplicity in this example, consider enabling in production
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())) // Allow H2 console to be embedded in a frame
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // Allow access to common static resources
-                .requestMatchers(new AntPathRequestMatcher("/"),
-                        new AntPathRequestMatcher("/login"),
-                        new AntPathRequestMatcher("/register"),
-                        new AntPathRequestMatcher("/main"),
-                        new AntPathRequestMatcher("/intro"),
-                        new AntPathRequestMatcher("/schedule"),
-                        new AntPathRequestMatcher("/clips"),
-                        new AntPathRequestMatcher("/podcast"),
-                        new AntPathRequestMatcher("/contact"),
-                        new AntPathRequestMatcher("/sns"),
-                        new AntPathRequestMatcher("/notices"),
-                        new AntPathRequestMatcher("/api/videos"),
-                        new AntPathRequestMatcher("/api/podcasts"),
-                        new AntPathRequestMatcher("/static/**")).permitAll() // Allow public access to these paths and static resources
+                .requestMatchers(
+                    new AntPathRequestMatcher("/style.css"),
+                    new AntPathRequestMatcher("/images/**"),
+                    new AntPathRequestMatcher("/css/**"),
+                    new AntPathRequestMatcher("/js/**"),
+                    new AntPathRequestMatcher("/js/podcast-detail.js"),
+                    new AntPathRequestMatcher("/js/footer-notices.js"),
+                    new AntPathRequestMatcher("/js/inquiry-detail.js"),
+                    new AntPathRequestMatcher("/"),
+                    new AntPathRequestMatcher("/login"),
+                    new AntPathRequestMatcher("/register"),
+                    new AntPathRequestMatcher("/main"),
+                    new AntPathRequestMatcher("/intro"),
+                    new AntPathRequestMatcher("/schedule"),
+                    new AntPathRequestMatcher("/clips"),
+                    new AntPathRequestMatcher("/podcast"),
+                    new AntPathRequestMatcher("/contact"),
+                    new AntPathRequestMatcher("/sns"),
+                    new AntPathRequestMatcher("/inquiries"),
+                    new AntPathRequestMatcher("/api/notices"),
+                    new AntPathRequestMatcher("/api/videos"),
+                    new AntPathRequestMatcher("/clips/api/videos"),
+                    new AntPathRequestMatcher("/api/podcasts"),
+                    new AntPathRequestMatcher("/favicon.ico"),
+                        new AntPathRequestMatcher("/error"),
+                    PathRequest.toH2Console()
+                ).permitAll() // Allow public access to these paths
+                
+                
                 .anyRequest().authenticated() // All other requests require authentication
             )
             .oauth2Login(oauth2 -> oauth2
@@ -57,7 +71,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login?logout") // Redirect to login page after logout
+                .logoutSuccessUrl("/") // Redirect to index page after logout
                 .permitAll()
             );
         return http.build();

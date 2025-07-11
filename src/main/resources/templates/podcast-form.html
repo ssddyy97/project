@@ -12,10 +12,11 @@
 
     <main class="container my-5">
         <div class="text-center mb-5">
-            <h1 class="mt-4 display-4">팟캐스트 에피소드 등록</h1>
+            <h1 class="mt-4 display-4" th:text="${podcastEpisode.id == null ? '팟캐스트 에피소드 등록' : '팟캐스트 에피소드 수정'}"></h1>
         </div>
 
-        <form th:action="@{/podcast/new}" th:object="${podcastEpisode}" method="post">
+        <form th:action="${podcastEpisode.id == null ? '/podcast/new' : '/podcast/edit/' + podcastEpisode.id}" th:object="${podcastEpisode}" method="post">
+            <input type="hidden" th:field="*{id}" />
             <div class="mb-3">
                 <label for="title" class="form-label">제목</label>
                 <input type="text" class="form-control" id="title" th:field="*{title}" required>
@@ -28,7 +29,7 @@
                 <label for="spotifyUrl" class="form-label">Spotify URL</label>
                 <input type="url" class="form-control" id="spotifyUrl" th:field="*{spotifyUrl}" required>
             </div>
-            <button type="submit" class="btn btn-primary">등록</button>
+            <button type="submit" class="btn btn-primary" th:text="${podcastEpisode.id == null ? '등록' : '수정'}"></button>
             <a th:href="@{/podcast}" class="btn btn-secondary">취소</a>
         </form>
     </main>
@@ -36,5 +37,6 @@
     <div th:replace="fragments/footer :: footer"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/footer-notices.js?v=1.0.0}"></script>
 </body>
 </html>

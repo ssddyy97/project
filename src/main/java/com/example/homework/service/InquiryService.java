@@ -52,11 +52,15 @@ public class InquiryService {
     @Transactional
     public Optional<Inquiry> getInquiryById(Long id) {
         Optional<Inquiry> inquiryOptional = inquiryRepository.findById(id);
-        inquiryOptional.ifPresent(inquiry -> {
-            inquiry.setViews(inquiry.getViews() + 1);
-            inquiryRepository.save(inquiry);
-        });
         return inquiryOptional;
+    }
+
+    @Transactional
+    public void incrementViews(Long id) {
+        Inquiry inquiry = inquiryRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Inquiry not found"));
+        inquiry.setViews(inquiry.getViews() + 1);
+        inquiryRepository.save(inquiry);
     }
 
     @Transactional

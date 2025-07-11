@@ -1,7 +1,11 @@
 package com.example.homework.service;
 
 import com.example.homework.domain.PodcastEpisode;
+import com.example.homework.domain.PodcastLike;
+import com.example.homework.domain.User;
 import com.example.homework.repository.PodcastEpisodeRepository;
+import com.example.homework.repository.PodcastLikeRepository;
+import com.example.homework.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +19,8 @@ import java.util.Optional;
 public class PodcastEpisodeService {
 
     private final PodcastEpisodeRepository podcastEpisodeRepository;
+    private final UserRepository userRepository;
+    private final PodcastLikeRepository podcastLikeRepository;
 
     @Transactional
     public PodcastEpisode savePodcastEpisode(PodcastEpisode podcastEpisode) {
@@ -29,11 +35,15 @@ public class PodcastEpisodeService {
     @Transactional
     public Optional<PodcastEpisode> getPodcastEpisodeById(Long id) {
         Optional<PodcastEpisode> episodeOptional = podcastEpisodeRepository.findById(id);
-        episodeOptional.ifPresent(episode -> {
-            episode.setViews(episode.getViews() + 1);
-            podcastEpisodeRepository.save(episode);
-        });
         return episodeOptional;
+    }
+
+    @Transactional
+    public void incrementViews(Long id) {
+        PodcastEpisode episode = podcastEpisodeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Podcast episode not found"));
+        episode.setViews(episode.getViews() + 1);
+        podcastEpisodeRepository.save(episode);
     }
 
     @Transactional(readOnly = true)
@@ -42,11 +52,27 @@ public class PodcastEpisodeService {
     }
 
     @Transactional
-    public PodcastEpisode incrementLikes(Long id) {
-        PodcastEpisode episode = podcastEpisodeRepository.findById(id)
+    public boolean incrementLikes(Long episodeId, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        PodcastEpisode episode = podcastEpisodeRepository.findById(episodeId)
                 .orElseThrow(() -> new IllegalArgumentException("Podcast episode not found"));
+
+        if (podcastLikeRepository.findByUserAndPodcastEpisode(user, episode).isPresent()) {
+            return false; // 이미 좋아요를 눌렀음
+        }
+
+        // 좋아요 기록
+        PodcastLike podcastLike = PodcastLike.builder()
+                .user(user)
+                .podcastEpisode(episode)
+                .build();
+        podcastLikeRepository.save(podcastLike);
+
+        // 좋아요 수 증가
         episode.setLikes(episode.getLikes() + 1);
-        return podcastEpisodeRepository.save(episode);
+        podcastEpisodeRepository.save(episode);
+        return true;
     }
 
     @Transactional

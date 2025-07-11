@@ -32,6 +32,9 @@ body {
 }
 
 .featured-sections .card {
+    display: flex;
+    flex-direction: column;
+    
     transition: transform 0.2s ease-in-out;
 }
 
@@ -40,8 +43,13 @@ body {
 }
 
 .featured-sections .card-img-top {
-    height: 200px;
+    height: 300px; /* 이미지 섹션 높이 */
     object-fit: cover;
+}
+
+.featured-sections .card-body {
+    height: 40%; /* 텍스트 섹션 높이 (40%) */
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 */
 }
 
 .program-info .card-title {

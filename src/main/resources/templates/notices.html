@@ -1,27 +1,69 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소담소담 공지사항</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>공지사항</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-    <div th:replace="fragments/header :: header"></div>
 
-    <main class="container my-5">
-        <div class="text-center mb-5">
-            <h1 class="mt-4 display-4">공지사항</h1>
-        </div>
+<div th:replace="~{fragments/header :: header}"></div>
 
-        <section class="mb-5">
-            <p class="lead">소담소담의 새로운 소식 및 공지사항을 확인할 수 있습니다.</p>
-        </section>
-    </main>
+<main class="container my-5">
+    <h1 class="mb-4">공지사항</h1>
 
-    <div th:replace="fragments/footer :: footer"></div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/notices/new}" class="btn btn-primary mb-3">새 공지사항 작성</a>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="notice : ${notices.content}">
+                <td th:text="${notice.id}"></td>
+                <td><a th:href="@{/notices/{id}(id=${notice.id})}" th:text="${notice.title}"></a></td>
+                <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${notice.viewCount}"></td>
+            </tr>
+            <tr th:if="${notices.isEmpty()}">
+                <td colspan="4" class="text-center">공지사항이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${notices.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/notices(page=0, size=${notices.size})}">처음</a>
+            </li>
+            <li class="page-item" th:classappend="${notices.first} ? 'disabled'">
+                <a class="page-link" th:href="@{/notices(page=${notices.number - 1}, size=${notices.size})}">이전</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, notices.number - 2), T(java.lang.Math).min(notices.totalPages - 1, notices.number + 2))}" th:classappend="${i == notices.number} ? 'active'">
+                <a class="page-link" th:href="@{/notices(page=${i}, size=${notices.size})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${notices.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/notices(page=${notices.number + 1}, size=${notices.size})}">다음</a>
+            </li>
+            <li class="page-item" th:classappend="${notices.last} ? 'disabled'">
+                <a class="page-link" th:href="@{/notices(page=${notices.totalPages - 1}, size=${notices.size})}">마지막</a>
+            </li>
+        </ul>
+    </nav>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

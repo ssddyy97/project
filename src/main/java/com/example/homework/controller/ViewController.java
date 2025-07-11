@@ -108,8 +108,5 @@ public class ViewController {
         return "sns";
     }
 
-    @GetMapping("/notices")
-    public String notices() {
-        return "notices";
-    }
+    
 }
